@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>For Aruna ❤️</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- 🔊 BACKGROUND AUDIO CONTROLLER -->
+<audio id="bgAudio"></audio>
+
+<!-- ❤️ PAGE 1 -->
+<div class="page active">
+    <div class="content">
+        <h1>Hi Aruna 💖</h1>
+        <h2>Happy Valentine’s Day ❤️</h2>
+        
+        <button onclick="nextFromPage1()">Next →</button>
+    </div>
+</div>
+
+<!-- ❤️ PAGE 2 -->
+<div class="page">
+    <div class="content">
+        <h2>Hey love, this little corner of the internet is just for you ❤️</h2>
+        <button onclick="nextFromPage2()">Next →</button>
+    </div>
+</div>
+
+<!-- 📸 PAGE 3 -->
+<div class="page">
+    <div class="content">
+        <h2>Our Memories 📸</h2>
+        <div class="gallery" id="gallery"></div>
+        <button onclick="stopBgAudio(); nextPage()">Next →</button>
+    </div>
+</div>
+
+<!-- 💕 PAGE 4 -->
+<div class="page">
+    <div class="content">
+        <h2>Reasons I Love You 💕</h2>
+        <div class="card"
+             onclick="playBgAudio('bgaudios/reasoniloveyou.mp3', false); showReason()">
+            Click me 💖
+        </div>
+        <p id="reasonText"></p>
+        <button onclick="goToValentine()">Next →</button>
+    </div>
+</div>
+
+<!-- 💘 PAGE 5 -->
+<div class="page">
+    <div class="content">
+        <h2>Will you be my Valentine? 💘</h2>
+        <div id="valentineArea">
+            <button onclick="playBgAudio('bgaudios/yes.mp3', false); yesClicked()">YES 💖</button>
+            <button id="noBtn" onmouseenter="moveNo()">NO 😏</button>
+        </div>
+    </div>
+</div>
+
+<!-- 🎉 PAGE 6 -->
+<div class="page">
+    <div class="content">
+        <h1>Yayyy 🥰🎉</h1>
+        <h2>It’s the best decision ever 💖</h2>
+        <img src="hug.gif" width="260">
+        <br><br>
+        <button onclick="stopBgAudio(); nextPage()">Next →</button>
+    </div>
+</div>
+
+<!-- 🎁 PAGE 7 -->
+<div class="page">
+    <div class="content">
+        <h2>Small Gifts for You 🎁</h2>
+        <p>Tap a gift to play 💖</p>
+
+        <div class="audio-list" id="audioList"></div>
+
+        <div class="audio-player" id="audioPlayer">
+            <p id="trackName"></p>
+            <audio id="audio" controls></audio>
+
+            <div class="controls">
+                <button onclick="prevTrack()">⏮</button>
+                <button onclick="togglePlay()">▶ / ⏸</button>
+                <button onclick="nextTrack()">⏭</button>
+            </div>
+        </div>
+
+        <h3>Forever yours ❤️</h3>
+    </div>
+</div>
+
+<script>
+/* ---------- PAGE NAV ---------- */
+let currentPage = 0;
+const pages = document.querySelectorAll(".page");
+
+function nextPage() {
+    if (currentPage < pages.length - 1) {
+        pages[currentPage].classList.remove("active");
+        currentPage++;
+        pages[currentPage].classList.add("active");
+    }
+}
+
+/* ---------- BG AUDIO ---------- */
+const bgAudio = document.getElementById("bgAudio");
+
+function playBgAudio(file, loop = false) {   // 🔒 default = NO LOOP
+    bgAudio.pause();
+    bgAudio.currentTime = 0;
+    bgAudio.src = file;
+    bgAudio.loop = loop;
+    bgAudio.play().catch(() => {});
+}
+
+function stopBgAudio() {
+    bgAudio.pause();
+    bgAudio.currentTime = 0;
+}
+
+/* ---------- PAGE-SPECIFIC ---------- */
+function nextFromPage1() {
+    nextPage();
+    playBgAudio("bgaudios/firstpage.mp3", false);
+}
+
+function nextFromPage2() {
+    playBgAudio("bgaudios/memories.mp3", false);
+    nextPage();
+}
+
+function goToValentine() {
+    playBgAudio("bgaudios/willyoubemyvalentine.mp3", false);
+    nextPage();
+}
+
+/* ---------- REASON ---------- */
+function showReason() {
+    document.getElementById("reasonText").innerText =
+        "I don’t need a reason to love you — loving you itself is the reason ❤️";
+}
+
+/* ---------- NO BUTTON (PLAY ONCE) ---------- */
+const noTexts = [
+    "NO 😏","Please no 😢","Don’t do this to me 🥺",
+    "This could be a mistake 😭","Think again 😳",
+    "Wrong button 😌","Try YES 👀","You know you want to 😏"
+];
+let noIndex = 0;
+let noSoundPlayed = false;
+
+function moveNo() {
+    if (!noSoundPlayed) {
+        playBgAudio("bgaudios/no.mp3", false);
+        noSoundPlayed = true;
+    }
+
+    const btn = document.getElementById("noBtn");
+    btn.style.left = Math.random() * 260 + "px";
+    btn.style.top = Math.random() * 120 + "px";
+    btn.innerText = noTexts[noIndex];
+    noIndex = (noIndex + 1) % noTexts.length;
+}
+
+function yesClicked() {
+    nextPage();
+}
+
+/* ---------- GALLERY ---------- */
+const gallery = document.getElementById("gallery");
+const totalPhotos = 44;
+
+for (let i = 1; i <= totalPhotos; i++) {
+    const img = document.createElement("img");
+    img.src = `photos/photo${i}.jpeg`;
+    img.style.animationDelay = `${i * 0.05}s`;
+    gallery.appendChild(img);
+}
+
+/* ---------- FINAL AUDIO GIFTS ---------- */
+const tracks = [
+    { name: "Pulavar Story 💖", file: "audio/gift1.mp3" },
+    { name: "Copy of Pulavar 🥰", file: "audio/gift2.mp3" }
+];
+
+const audio = document.getElementById("audio");
+const trackName = document.getElementById("trackName");
+const audioList = document.getElementById("audioList");
+const audioPlayer = document.getElementById("audioPlayer");
+
+let currentTrack = 0;
+
+tracks.forEach((track, index) => {
+    const item = document.createElement("div");
+    item.className = "audio-item";
+    item.innerText = track.name;
+    item.onclick = () => playTrack(index);
+    audioList.appendChild(item);
+});
+
+function playTrack(index) {
+    currentTrack = index;
+    audio.src = tracks[index].file;
+    trackName.innerText = tracks[index].name;
+    audioPlayer.style.display = "block";
+    audio.play().catch(() => {});
+}
+
+function togglePlay() {
+    audio.paused ? audio.play() : audio.pause();
+}
+function nextTrack() {
+    playTrack((currentTrack + 1) % tracks.length);
+}
+function prevTrack() {
+    playTrack((currentTrack - 1 + tracks.length) % tracks.length);
+}
+</script>
+
+</body>
+</html>
